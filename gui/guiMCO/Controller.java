@@ -15,16 +15,18 @@ public class Controller {
     private ManageHotel manageHotel;
     private ViewHotel viewHotel;
     private HotelOverview hotelOverview;
+    private RoomAndReservation roomAndReservation;
 
     // MAIN MENU BUTTONS
 
-    public Controller(MainMenu mainMenu, CreateHotel createHotel, SimulateBooking simulateBooking, ManageHotel manageHotel, ViewHotel viewHotel, HotelOverview hotelOverview, HotelSystem model){
+    public Controller(MainMenu mainMenu, CreateHotel createHotel, SimulateBooking simulateBooking, ManageHotel manageHotel, ViewHotel viewHotel, HotelOverview hotelOverview, RoomAndReservation roomAndReservation, HotelSystem model){
         this.mainMenu = mainMenu;
         this.createHotel = createHotel;
         this.simulateBooking = simulateBooking;
         this.manageHotel = manageHotel;
         this.viewHotel = viewHotel;
         this.hotelOverview = hotelOverview;
+        this.roomAndReservation = roomAndReservation;
         this.model = model;
 
         //MainMenu
@@ -142,7 +144,7 @@ public class Controller {
                 hotelOverview.getNoRoomsLabel().setText("" + model.getHotel().get(selectedIndex).getTotalRooms());
                 hotelOverview.getTotalRevenueLabel().setText("" + model.getHotel().get(selectedIndex).getEarnings());
 
-                mainMenu.getMainMenuFrame().setVisible(false);
+                viewHotel.getViewHotelFrame().setVisible(false);
                 hotelOverview.getHoteloverviewFrame().setVisible(true);
             }
         });
@@ -150,8 +152,9 @@ public class Controller {
         this.viewHotel.getRoomReservationButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-
-
+                roomAndReservation.getRoomAndReservationFrame().setVisible(true);
+                viewHotel.getViewHotelFrame().setVisible(false);
+                
             }
         });
 
@@ -174,6 +177,17 @@ public class Controller {
             }
         });
 
+        // RoomReservation
+
+        this.roomAndReservation.getCheckOutDateComboBox().addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e){
+                int selectedIndex = viewHotel.getSelectHotelComboBox().getSelectedIndex();
+
+                fillFirstTextArea(selectedIndex);
+
+           } 
+        });
 
         //Manage Hotel
 
@@ -369,10 +383,15 @@ public class Controller {
                 
                 if(result == JOptionPane.YES_OPTION){
                     String discountCodeInputted = JOptionPane.showInputDialog("Discount Code: ");
-                } else if(result == JOptionPane.NO_OPTION){
+                    Discount discount = new Discount();
+                    discount.applyDiscount(discountCodeInputted, model.getHotel().get(selectedHotelIndex).getRoom(roomIndex).getReservation(latestReservationIndex));
+                } 
+                else if(result == JOptionPane.NO_OPTION){
                     JOptionPane.showMessageDialog(null, "You reserved with no Discount!", "Reservation", 1);
                 }
 
+                simulateBooking.getSimulateBookingFrame().setVisible(false);
+                mainMenu.getMainMenuFrame().setVisible(true);
             }
         });
 
@@ -440,8 +459,35 @@ public class Controller {
                 simulateBooking.getCheckOutComboBox().addItem(i);
             }
         }
+    }
+
+    public void fillSelectCheckDatesForView(){
+        roomAndReservation.getCheckInDateComboBox().removeAllItems();
+        roomAndReservation.getCheckOutDateComboBox().removeAllItems();
+
+        for (int i = 1; i < 31; i++){
+            if(i <= 30){
+                roomAndReservation.getCheckInDateComboBox().addItem(i);
+            }
+            if(i >= 2){
+                roomAndReservation.getCheckOutDateComboBox().addItem(i);
+            }
+        }
 
     }
 
+    public void fillFirstTextArea(int selectedIndex){
+
+        roomAndReservation.getFirstTextArea().removeAll();
+
+        int checkIn = (int) roomAndReservation.getCheckInDateComboBox().getSelectedItem();
+        int checkOut = (int) roomAndReservation.getCheckOutDateComboBox().getSelectedItem();
+
+        for(int i = 0; i < model.getHotel().get(selectedIndex).getRoom().size(); i++){
+            if(model.getHotel().get(selectedIndex).getRoom(i).checkAvailability(checkIn, checkOut) == true){
+                roomAndReservation.getFirstTextArea().append(model.getHotel().get(selectedIndex).getRoom(i).getRoomName() + "\n");
+            }
+        }
+    }
 
 }

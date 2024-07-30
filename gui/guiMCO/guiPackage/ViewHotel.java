@@ -12,7 +12,6 @@ public class ViewHotel {
 	private JFrame frame;
 	private JButton hotelOverviewButton;
 	private JButton roomReservationsButton;
-	private JButton confirmButton;
 	private JComboBox selectHotelComboBox;
 	private JButton backButton;
 
@@ -50,10 +49,6 @@ public class ViewHotel {
 		lblNewLabel_1.setBounds(157, 244, 225, 40);
 		frame.getContentPane().add(lblNewLabel_1);
 		
-		confirmButton = new JButton("Confirm");
-		confirmButton.setBounds(387, 32, 100, 30);
-		frame.getContentPane().add(confirmButton);
-		
 		JLabel lblNewLabel_2 = new JLabel("Hotels:");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblNewLabel_2.setBounds(45, 23, 100, 40);
@@ -78,10 +73,6 @@ public class ViewHotel {
 
 	public JButton getRoomReservationButton(){
 		return roomReservationsButton;
-	}
-
-	public JButton getConfirmButton(){
-		return getConfirmButton();
 	}
 
 	public JComboBox getSelectHotelComboBox(){

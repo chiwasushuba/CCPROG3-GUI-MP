@@ -10,6 +10,7 @@ public class Driver {
         ViewHotel viewHotel = new ViewHotel();
         HotelOverview hotelOverview = new HotelOverview();
         ManageHotel manageHotel = new ManageHotel();
-        Controller controller = new Controller(mainMenu, createHotel, simulateBooking, manageHotel, viewHotel, hotelOverview, model);
+        RoomAndReservation roomAndReservation = new RoomAndReservation();
+        Controller controller = new Controller(mainMenu, createHotel, simulateBooking, manageHotel, viewHotel, hotelOverview, roomAndReservation,model);
     }
 }
