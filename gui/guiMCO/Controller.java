@@ -152,9 +152,16 @@ public class Controller {
         this.viewHotel.getRoomReservationButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                roomAndReservation.getRoomAndReservationFrame().setVisible(true);
-                viewHotel.getViewHotelFrame().setVisible(false);
-                
+                try {
+                    int selectedHotelIndex = viewHotel.getSelectHotelComboBox().getSelectedIndex();
+                    fillSelectCheckDatesForView();
+                    fillSelectRoomForView(selectedHotelIndex);
+                    roomAndReservation.getRoomAndReservationFrame().setVisible(true);
+                    viewHotel.getViewHotelFrame().setVisible(false);
+                } catch (Exception NullPointerException) {
+                    viewHotel.getViewHotelFrame().dispose();
+                    mainMenu.getMainMenuFrame().setVisible(true);
+                }
             }
         });
 
@@ -189,6 +196,45 @@ public class Controller {
            } 
         });
 
+        this.roomAndReservation.getSelectRoomComboBoxRoom().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+
+                int selectedIndex = viewHotel.getSelectHotelComboBox().getSelectedIndex();
+                int selectedRoomIndex = roomAndReservation.getSelectRoomComboBoxRoom().getSelectedIndex();
+                String roomDays = setStringAvailDays();
+                String pricePerNight = String.valueOf(model.getHotel().get(selectedIndex).getRoom(selectedRoomIndex).getPrice());
+                String roomName = model.getHotel().get(selectedIndex).getRoom(selectedIndex).getRoomName();
+                roomAndReservation.getAvailDaysLabel().setText(roomDays);
+                roomAndReservation.getPricePerNightLabel().setText(pricePerNight);
+                roomAndReservation.getRoomNameLabel().setText(roomName);
+
+            }
+        });
+
+        this.roomAndReservation.getSelectRoomComboBoxReservation().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                fillSelectRoomReservationForView();
+            }
+        });
+
+        this.roomAndReservation.getSelectReservationComboBoxReservation().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                fillTextArea();
+            }
+        });
+
+        this.roomAndReservation.getBackButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                viewHotel.getViewHotelFrame().setVisible(true);
+                roomAndReservation.getRoomAndReservationFrame().setVisible(false);
+            }
+        });
+
+        
         //Manage Hotel
 
         this.manageHotel.getCancelButton().addActionListener(new ActionListener() {
@@ -290,6 +336,18 @@ public class Controller {
             }
         });
 
+        this.manageHotel.getUpdateRoomPriceButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                int selectedHotelIndex=  manageHotel.getSelectHotelComboBox().getSelectedIndex();
+                int selectedRoomIndex = manageHotel.getUpdateRoomPriceComboBox().getSelectedIndex();
+                double newPrice = Double.parseDouble(manageHotel.getUpdatePriceTF().getText());
+
+                model.getHotel().get(selectedHotelIndex).getRoom(selectedRoomIndex).setPrice(newPrice);
+            }
+            
+        });
+
 
         // Simulate Booking
 
@@ -299,7 +357,6 @@ public class Controller {
                 int selectedIndex = simulateBooking.getSelectHotelComboBox().getSelectedIndex();
 
                 simulateBooking.getSelectRoomComboBox().removeAllItems();
-                simulateBooking.getStandardRDButton().setSelected(true);
                 fillSelectCheckDates();
 
             }
@@ -318,34 +375,6 @@ public class Controller {
             public void actionPerformed(ActionEvent e){
                 simulateBooking.getSimulateBookingFrame().setVisible(false);
                 mainMenu.getMainMenuFrame().setVisible(true);
-            }
-        });
-
-        this.simulateBooking.getStandardRDButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                simulateBooking.getDeluxeRDButton().setSelected(false);
-                simulateBooking.getExclusiveRDButton().setSelected(false);
-
-
-            }
-        });
-
-        this.simulateBooking.getDeluxeRDButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                simulateBooking.getStandardRDButton().setSelected(false);
-                simulateBooking.getExclusiveRDButton().setSelected(false);
-
-            }
-        });
-
-        this.simulateBooking.getExclusiveRDButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                simulateBooking.getStandardRDButton().setSelected(false);
-                simulateBooking.getDeluxeRDButton().setSelected(false);
-
             }
         });
 
@@ -379,7 +408,7 @@ public class Controller {
 
                 int latestReservationIndex = model.getHotel().get(selectedHotelIndex).getRoom(selectedRoomIndex).getReservationList().size() - 1;
 
-                int result = JOptionPane.showConfirmDialog(null, "nigga", "Discount Code", 0);
+                int result = JOptionPane.showConfirmDialog(null, "Do you want a Discount?", "Discount Code", 0);
                 
                 if(result == JOptionPane.YES_OPTION){
                     String discountCodeInputted = JOptionPane.showInputDialog("Discount Code: ");
@@ -421,6 +450,7 @@ public class Controller {
         for(int i = 0; i < model.getHotel().get(selectedIndex).getTotalRooms(); i++){
             manageHotel.getRemoveReservationRoomComboBox().addItem(model.getHotel().get(selectedIndex).getRoom(i).getRoomName());
             manageHotel.getRemoveHotelRoomComboBox().addItem(model.getHotel().get(selectedIndex).getRoom(i).getRoomName());
+            manageHotel.getUpdateRoomPriceComboBox().addItem(model.getHotel().get(selectedIndex).getRoom(i).getRoomName());
         }
     }
 
@@ -478,7 +508,7 @@ public class Controller {
 
     public void fillFirstTextArea(int selectedIndex){
 
-        roomAndReservation.getFirstTextArea().removeAll();
+        roomAndReservation.getFirstTextArea().setText("");
 
         int checkIn = (int) roomAndReservation.getCheckInDateComboBox().getSelectedItem();
         int checkOut = (int) roomAndReservation.getCheckOutDateComboBox().getSelectedItem();
@@ -490,4 +520,75 @@ public class Controller {
         }
     }
 
+    public String setStringAvailDays(){
+
+        int selectedIndex = viewHotel.getSelectHotelComboBox().getSelectedIndex();
+        int selectedRoomIndex = roomAndReservation.getSelectRoomComboBoxRoom().getSelectedIndex();
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int x = 0; x < 31; x++){
+            if (model.getHotel().get(selectedIndex).getRoom(selectedRoomIndex).getAvailableCheckInDays()[x] == true)
+                sb.append(" "+ (x+1) + " ");
+        }
+        return sb.toString();
+    }
+
+    public void fillSelectRoomForView(int selectedIndex) {
+        //Selected Index is for the hotel
+        int n = model.getHotel().get(selectedIndex).getTotalRooms();
+    
+        // Clear the combo boxes
+        // roomAndReservation.getSelectRoomComboBoxReservation().removeAllItems();
+        // roomAndReservation.getSelectRoomComboBoxRoom().removeAllItems();
+    
+        for(int i = 0; i < n; i++){
+            roomAndReservation.getSelectRoomComboBoxRoom().addItem(model.getHotel().get(selectedIndex).getRoom(i).getRoomName());
+            roomAndReservation.getSelectReservationComboBoxReservation().addItem(model.getHotel().get(selectedIndex).getRoom(i).getRoomName());
+        }
+
+        System.out.println("Success");
+    }
+
+    public void fillSelectRoomReservationForView(){
+        int selectedIndex = viewHotel.getSelectHotelComboBox().getSelectedIndex();
+        int selectedRoomIndex = roomAndReservation.getSelectRoomComboBoxRoom().getSelectedIndex();
+        int n = model.getHotel().get(selectedIndex).getRoom(selectedRoomIndex).getReservationList().size();
+
+        roomAndReservation.getSelectReservationComboBoxReservation().removeAllItems();
+
+        for(int i = 0; i < n; i++){
+            String reservations = model.getHotel().get(selectedIndex).getRoom(selectedRoomIndex).getReservation(i).getGuestName();
+            roomAndReservation.getSelectReservationComboBoxReservation().addItem(reservations);
+        }
+    }
+
+    public void fillTextArea(){
+        int selectedIndex = viewHotel.getSelectHotelComboBox().getSelectedIndex();
+        int selectedRoomIndex = roomAndReservation.getSelectRoomComboBoxRoom().getSelectedIndex();
+        int selectedReservation = roomAndReservation.getSelectReservationComboBoxReservation().getSelectedIndex();
+        String  guestName = model.getHotel().get(selectedIndex).getRoom(selectedRoomIndex).getReservation(selectedReservation).getGuestName();
+        int checkIn = model.getHotel().get(selectedIndex).getRoom(selectedRoomIndex).getReservation(selectedReservation).getCheckInDate();
+        int checkOut = model.getHotel().get(selectedIndex).getRoom(selectedRoomIndex).getReservation(selectedReservation).getCheckoutDate();
+        double totalCost = model.getHotel().get(selectedIndex).getRoom(selectedRoomIndex).getReservation(selectedReservation).getTotalPrice();
+        String forDiscount = model.getHotel().get(selectedIndex).getRoom(selectedRoomIndex).getReservation(selectedReservation).getDiscountCode();
+
+
+        roomAndReservation.getFirstTextArea().setText("");
+
+        roomAndReservation.getTextArea().append("Here is the reservation info:\n");
+        roomAndReservation.getTextArea().append("Guest Name: " + guestName + "\n");
+        roomAndReservation.getTextArea().append("Check In: " + checkIn + "\n");
+        roomAndReservation.getTextArea().append("Check Out: " + checkOut + "\n");
+        roomAndReservation.getTextArea().append("Total Cost: " + totalCost + "\n");
+        roomAndReservation.getTextArea().append("Discount code Applied:" + forDiscount + "\n");
+        roomAndReservation.getTextArea().append("Breakdown Cost:\n\n");
+
+        int numDay = 1;
+        for(int i = 0; i < checkIn; i++){
+            roomAndReservation.getTextArea().append("Day " + numDay + ": " + model.getHotel().get(selectedIndex).getRoom(selectedRoomIndex).getPrice() * model.getHotel().get(selectedIndex).getDPM().getPercentage(i) + "\n");
+            numDay++;
+        }
+
+    }
 }

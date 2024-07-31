@@ -8,6 +8,7 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JList;
@@ -26,6 +27,7 @@ public class RoomAndReservation {
     private JTextArea textArea;
     private JTextArea firstTextArea;
     private JComboBox selectReservationComboBoxReservation;
+    private JButton backButton;
 
 	/**
 	 * Create the application.
@@ -43,7 +45,7 @@ public class RoomAndReservation {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JButton backButton = new JButton("Back");
+		backButton = new JButton("Back");
 		backButton.setBounds(10, 402, 85, 21);
 		frame.getContentPane().add(backButton);
 		
@@ -69,10 +71,15 @@ public class RoomAndReservation {
 		checkOutLabel.setBounds(287, 26, 116, 23);
 		viewPanel.add(checkOutLabel);
 		
+        JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(20, 59, 510, 260);
+		viewPanel.add(scrollPane_1);
+
 		firstTextArea = new JTextArea();
 		firstTextArea.setBounds(24, 79, 494, 232);
-		viewPanel.add(firstTextArea);
-		
+        firstTextArea.setLineWrap(true);
+		scrollPane_1.setViewportView(firstTextArea);
+
 		checkOutDateComboBox = new JComboBox();
 		checkOutDateComboBox.setBounds(408, 29, 110, 21);
 		viewPanel.add(checkOutDateComboBox);
@@ -143,10 +150,13 @@ public class RoomAndReservation {
 		lblNewLabel_6.setBounds(268, 24, 127, 13);
 		reservationOverviewPanel.add(lblNewLabel_6);
 		
+        JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(26, 61, 507, 260);
+		reservationOverviewPanel.add(scrollPane_2);
+
 		textArea = new JTextArea();
 		textArea.setLineWrap(true);
-		textArea.setBounds(26, 61, 507, 260);
-		reservationOverviewPanel.add(textArea);
+		scrollPane_2.setViewportView(textArea);
 
         selectReservationComboBoxReservation = new JComboBox();
 		selectReservationComboBoxReservation.setBounds(405, 21, 128, 21);
@@ -197,5 +207,8 @@ public class RoomAndReservation {
         return textArea;
     }
 
+    public JButton getBackButton(){
+        return backButton;
+    }
 
 }

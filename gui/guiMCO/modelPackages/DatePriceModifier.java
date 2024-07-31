@@ -31,8 +31,7 @@ public class DatePriceModifier{
         for(int i = reservation.getCheckInDate(); i < reservation.getCheckoutDate(); i++){
             System.out.println("Day " + numDay + ": " + percentage[i-1]*room.getPrice());
             numDay++;
-        }
-        
+        }  
     }
 
     /**

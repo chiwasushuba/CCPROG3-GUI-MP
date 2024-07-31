@@ -29,6 +29,7 @@ public class ManageHotel {
 	private JButton removeHotelRoomButton;
 	private JButton updateRoomPriceButton;
 	private JButton removeReservationRoomButton;
+	private JTextField textField;
 
 	
 	/**
@@ -97,7 +98,7 @@ public class ManageHotel {
 		ManageHotelFrame.getContentPane().add(removeHotelRoomComboBox);
 		
 		updateRoomPriceComboBox = new JComboBox();
-		updateRoomPriceComboBox.setBounds(227, 336, 327, 24);
+		updateRoomPriceComboBox.setBounds(227, 336, 141, 24);
 		ManageHotelFrame.getContentPane().add(updateRoomPriceComboBox);
 		
 		removeReservationsAvailableComboBox = new JComboBox();
@@ -144,6 +145,11 @@ public class ManageHotel {
 		removeReservationRoomButton = new JButton("Remove");
 		removeReservationRoomButton.setBounds(611, 410, 85, 24);
 		ManageHotelFrame.getContentPane().add(removeReservationRoomButton);
+		
+		textField = new JTextField();
+		textField.setBounds(424, 337, 130, 19);
+		ManageHotelFrame.getContentPane().add(textField);
+		textField.setColumns(10);
 	}
 
 	public JFrame getManageHotelFrame(){
@@ -210,4 +216,7 @@ public class ManageHotel {
 		return addHotelRoomTF;
 	}
 
+	public JTextField getUpdatePriceTF(){
+		return textField;
+	}
 }

@@ -14,9 +14,6 @@ public class SimulateBooking {
 
 	private JFrame frame;
 	private JComboBox selectHotelComboBox;
-	private JRadioButton rdbtnNewRadioButton;
-	private JRadioButton rdbtnNewRadioButton_1;
-	private JRadioButton rdbtnNewRadioButton_2;
 	private JButton backButton;
 	private JLabel lblNewLabel_3;
 	private JTextField guestFirstTF;
@@ -51,23 +48,6 @@ public class SimulateBooking {
 		selectHotelComboBox = new JComboBox();
 		selectHotelComboBox.setBounds(221, 41, 360, 30);
 		frame.getContentPane().add(selectHotelComboBox);
-		
-		JLabel lblNewLabel_1 = new JLabel("Pick kind of room");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_1.setBounds(40, 116, 126, 35);
-		frame.getContentPane().add(lblNewLabel_1);
-		
-		rdbtnNewRadioButton = new JRadioButton("Standard");
-		rdbtnNewRadioButton.setBounds(221, 125, 103, 21);
-		frame.getContentPane().add(rdbtnNewRadioButton);
-		
-		rdbtnNewRadioButton_1 = new JRadioButton("Deluxe");
-		rdbtnNewRadioButton_1.setBounds(350, 125, 103, 21);
-		frame.getContentPane().add(rdbtnNewRadioButton_1);
-		
-		rdbtnNewRadioButton_2 = new JRadioButton("Exclusive");
-		rdbtnNewRadioButton_2.setBounds(478, 125, 103, 21);
-		frame.getContentPane().add(rdbtnNewRadioButton_2);
 
 		backButton = new JButton("Back");
 		backButton.setBounds(20,455, 100, 30);
@@ -132,18 +112,6 @@ public class SimulateBooking {
 
 	public JComboBox getSelectHotelComboBox(){
 		return selectHotelComboBox;
-	}
-
-	public JRadioButton getStandardRDButton(){
-		return rdbtnNewRadioButton;
-	}
-
-	public JRadioButton getDeluxeRDButton(){
-		return rdbtnNewRadioButton_1;
-	}
-	
-	public JRadioButton getExclusiveRDButton(){
-		return rdbtnNewRadioButton_2;
 	}
 
 	public JButton getBackButton(){
